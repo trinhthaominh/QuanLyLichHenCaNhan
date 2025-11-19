@@ -37,7 +37,7 @@
             android:textStyle="bold"
             android:textSize="18dp"/>
 
-        <androidx.appcompat.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/edtFrom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -46,6 +46,7 @@
             android:background="@drawable/main_stroke"
             android:padding="8dp"
             android:inputType="date"
+
             android:drawableEnd="@drawable/calendar_svgrepo_com"
             />
     </LinearLayout>
@@ -67,7 +68,7 @@
             android:textStyle="bold"
             android:textSize="18dp"/>
 
-        <androidx.appcompat.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/edtTo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

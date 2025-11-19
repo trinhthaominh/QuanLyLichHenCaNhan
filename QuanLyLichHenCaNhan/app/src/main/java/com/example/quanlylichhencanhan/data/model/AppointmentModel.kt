@@ -9,7 +9,7 @@ data class AppointmentModel(
     @PrimaryKey
     val id: Int? = null,
     val fullName: String,
-    val dateTime: Timestamp,
+    val dateTime: String,
     val place: String,
     val linkPic: String,
 )
