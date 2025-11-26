@@ -10,20 +10,17 @@ import androidx.room.Update
 import com.example.quanlylichhencanhan.data.model.AppointmentModel
 
 @Dao
-interface AppointmentDao {
+interface AppointmentDao  {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAppointment(appointment: AppointmentModel)
 
     // Dùng fun trả về LiveData hoặc Flow cho các truy vấn
     // mà bạn muốn UI tự động cập nhật khi dữ liệu thay đổi.
-    @Query("SELECT * FROM AppointmentModel ORDER BY id DESC")
+    @Query("SELECT * FROM appointment_table ORDER BY id DESC")
     fun getAllAppointment(): LiveData<List<AppointmentModel>>
 
-//    @Query ("SELECT SUM(amount) FROM AppointmentModel")
-//    fun getTotalExpense(): LiveData<Double>
-
-    @Query("SELECT * FROM AppointmentModel WHERE id = :appointmentId")
+    @Query("SELECT * FROM appointment_table WHERE id = :appointmentId")
     suspend fun getAppointmentById(appointmentId: Long): AppointmentModel
 
     @Delete

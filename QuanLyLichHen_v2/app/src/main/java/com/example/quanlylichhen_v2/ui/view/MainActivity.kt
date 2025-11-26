@@ -1,40 +1,28 @@
-package com.example.quanlylichhencanhan.ui.view
+package com.example.quanlylichhen_v2.ui.view
 
-import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
-import android.util.Log
-import android.view.MotionEvent
-import android.view.View
-import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.quanlylichhencanhan.R
-import com.example.quanlylichhencanhan.data.model.AppointmentModel
-import com.example.quanlylichhencanhan.databinding.ActivityMainBinding
-import com.example.quanlylichhencanhan.databinding.DialoglAddAppointmentBinding
-import com.example.quanlylichhencanhan.ui.adapter.AppointmentAdapter
-import com.example.quanlylichhencanhan.ui.viewmodel.AppointmentViewModel
-import com.example.quanlylichhencanhan.ui.viewmodel.DateTimeViewModel
-import kotlinx.coroutines.launch
+import com.example.quanlylichhen_v2.R
+import com.example.quanlylichhen_v2.data.model.AppointmentModel
+import com.example.quanlylichhen_v2.databinding.ActivityMainBinding
+import com.example.quanlylichhen_v2.databinding.DialoglAddAppointmentBinding
+import com.example.quanlylichhen_v2.ui.adapter.AppointmentAdapter
+import com.example.quanlylichhen_v2.ui.viewmodel.AppointmentViewModel
 import java.util.Calendar
 
-
 class MainActivity : AppCompatActivity() {
-    private lateinit var binding : ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
     lateinit var viewModel: AppointmentViewModel
     private lateinit var adapter: AppointmentAdapter
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,9 +31,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         adapter = AppointmentAdapter { appointment ->
-            lifecycleScope.launch {
-                viewModel.deleteAppointment(appointment)
-            }
+            viewModel.insertAppointment(appointment)
         }
 
         binding.rvAppointment.adapter = adapter
@@ -53,65 +39,52 @@ class MainActivity : AppCompatActivity() {
         binding.rvAppointment.layoutManager = LinearLayoutManager(this)
 
         viewModel = ViewModelProvider(this)[AppointmentViewModel::class.java]
-        viewModel.allAppointment.observe(this) {
-            adapter.setData(it)
+        viewModel.allAppointments.observe(this) { appointments ->
+            adapter.setAppointments(appointments)
         }
-        binding.btnAdd.setOnClickListener {
-            val dialog = showAddAppointmentDialog()
-        }
+
+
         binding.edtFrom.setOnClickListener {
             showDatePickerDialog(binding.edtFrom)
         }
         binding.edtTo.setOnClickListener {
             showDatePickerDialog(binding.edtTo)
         }
+
+
+        binding.btnAdd.setOnClickListener {
+            val dialog = showAddAppointmentDialog()
+        }
     }
     fun showAddAppointmentDialog() {
         val dialogBinding = DialoglAddAppointmentBinding.inflate(layoutInflater)
-        //val current = viewModel2.getCurrentTime()
         dialogBinding.edtDateTime.setOnClickListener {
 
             showDatePickerDialog(dialogBinding.edtDateTime)
         }
         val dialog = AlertDialog.Builder(this)
-            .setTitle("Thêm lịch hẹn")
             .setView(dialogBinding.root)
+            .setTitle("Thêm lịch hẹn")
             .setPositiveButton("Thêm") { _, _ ->
                 val fullName = dialogBinding.edtFullName.text.toString()
                 val dateTime = dialogBinding.edtDateTime.text.toString()
                 val place = dialogBinding.edtPlace.text.toString()
-                val link = dialogBinding.edtLink.text.toString()
+                val linkPic = dialogBinding.edtLink.text.toString()
 
-                val newAppointment = AppointmentModel(
+                val appointment = AppointmentModel(
                     fullName = fullName,
                     dateTime = dateTime,
                     place = place,
-                    linkPic = link)
-
-                lifecycleScope.launch {
-                    viewModel.insertAppointment(newAppointment)
-                }
-
-//                val appointmentDate = viewModel2.parseDateTime(dateTime)
-//
-//                if (appointmentDate == null) {
-//                    android.widget.Toast.makeText(this, "Vui lòng chọn Ngày và Giờ hợp lệ.", android.widget.Toast.LENGTH_SHORT).show()
-//                } else {
-//                    val appointmentMillis = appointmentDate.time
-//
-//                    if (appointmentMillis < current) {
-//
-//                        android.widget.Toast.makeText(this, "Không thể thêm lịch hẹn trong quá khứ.", android.widget.Toast.LENGTH_LONG).show()
-//                    } else {
-//                        android.widget.Toast.makeText(this, "Lịch hẹn hợp lệ, đang được thêm.", android.widget.Toast.LENGTH_SHORT).show()
-//                    }
-//                }
+                    linkPic = linkPic
+                )
+                viewModel.insertAppointment(appointment)
             }
             .setNegativeButton("Hủy", null)
             .create()
         dialog.show()
 
     }
+
     fun showDatePickerDialog(targetTextView : TextView) {
         val calendar = Calendar.getInstance()
         val initialYear = calendar.get(Calendar.YEAR)
@@ -151,10 +124,6 @@ class MainActivity : AppCompatActivity() {
 
         }, initialYear, initialMonth, initialDate).show()
     }
-
-
- }
-
-
+}
 
 

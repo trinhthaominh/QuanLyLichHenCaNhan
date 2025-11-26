@@ -1,13 +1,12 @@
-package com.example.quanlylichhencanhan.data.model
+package com.example.quanlylichhen_v2.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.sql.Timestamp
 
 @Entity(tableName = "appointment_table")
 data class AppointmentModel(
     @PrimaryKey(autoGenerate = true)
-    val id: Int? = null,
+    val appointmentId: Int? = null,
     val fullName: String,
     val dateTime: String,
     val place: String,
